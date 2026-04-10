@@ -57,7 +57,7 @@ const menuItems = [
     },
     {
         title: "Resume Builder",
-        url: "/dashboard/resume",
+        url: "/dashboard/resume-builder",
         icon: FileText
     },
     {

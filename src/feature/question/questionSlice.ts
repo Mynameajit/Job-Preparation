@@ -16,12 +16,13 @@ export type Problem = {
   difficulty: "easy" | "medium" | "hard";
   category: string;
 
-  acceptance: string; // ❌ String → ✅ string
+  type: string; // ❌ String → ✅ string
   companies: string[]; // ❌ [String] → ✅ string[]
 
   // ✅ ADD THESE (IMPORTANT)
   testCases?: TestCase[];
   constraints?: string | string[];
+  isSolved?: boolean;
 };
 
 

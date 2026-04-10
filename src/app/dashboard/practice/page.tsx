@@ -37,16 +37,16 @@ export default function CodingPracticePage() {
         return () => clearTimeout(delay)
 
 
-    }, [search, category, difficulty, page, questions.length, dispatch])
+    }, [search, category, difficulty, page,, dispatch])
 
 
 
     return (
         <div className="space-y-6 p-2 md:p-6">
             <div>
-                <h1 className="text-2xl font-bold tracking-tight">Mock Tests</h1>
+                <h1 className="text-2xl font-bold tracking-tight"> Coding Practice</h1>
                 <p className="text-muted-foreground text-sm">
-                    Take realistic tests to simulate placement exams
+                    Take realistic Coding Challenges to simulate placement exams
                 </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">

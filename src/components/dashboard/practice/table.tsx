@@ -9,7 +9,7 @@ import {
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, Circle } from "lucide-react"
 import Link from "next/link"
 import { PaginationBtn } from "@/components/common/paginationBtn"
 import { useAppSelector } from "@/hooks/useRedux"
@@ -39,7 +39,7 @@ export default function ProblemsTable() {
                             <TableHead>Title</TableHead>
                             <TableHead>Difficulty</TableHead>
                             <TableHead>Category</TableHead>
-                            <TableHead>Acceptance</TableHead>
+                            <TableHead>Type</TableHead>
                             <TableHead>Status</TableHead>
                             {/* <TableHead>Companies</TableHead> */}
                             <TableHead>Action</TableHead>
@@ -81,10 +81,14 @@ export default function ProblemsTable() {
 
                                 <TableCell>{p.category}</TableCell>
 
-                                <TableCell>{p.acceptance}</TableCell>
+                                <TableCell>{p.type}</TableCell>
 
                                 <TableCell>
-                                    <CheckCircle className="text-green-500" size={18} />
+                                    {p.isSolved ? (
+                                        <CheckCircle className="text-green-500" size={18} />
+                                    ) : (
+                                        <Circle className="text-muted-foreground" size={18} />
+                                    )}
                                 </TableCell>
                                 {/* <TableCell className="space-x-2">
 

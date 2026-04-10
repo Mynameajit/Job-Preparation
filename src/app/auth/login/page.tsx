@@ -19,7 +19,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, x: -80 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7 }}
-          className="sm:display-none md:block p-1 space-y-8 w-full"
+          className="hidden md:block p-1 space-y-8 w-full"
         >
 
           {/* HEADING */}
