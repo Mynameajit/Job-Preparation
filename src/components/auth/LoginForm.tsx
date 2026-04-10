@@ -96,7 +96,7 @@ export default function LoginForm() {
       initial={{ opacity: 0, x: 60 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6 }}
-      className="lg:w-md max-w-lg sm:w-full h-full rounded-xl p-8"
+      className="lg:w-md max-w-lg sm:w-full h-full rounded-xl p-2"
     >
 
       {/* Title */}

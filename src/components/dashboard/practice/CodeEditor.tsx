@@ -7,7 +7,7 @@ type Props = {
   starterCode?: string
 }
 
-export default function CodeEditor({ starterCode, language }: any) {
+export default function CodeEditor({ starterCode, language, onChange }: any) {
   return (
     <div className="h-full p-3 bg-background">
 
@@ -20,7 +20,7 @@ export default function CodeEditor({ starterCode, language }: any) {
             Code Editor
           </span>
 
-          <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">
+          <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded px-3 py-1 bg-gray-100 dark:bg-gray-800">
             {language}
           </span>
         </div>
@@ -29,13 +29,16 @@ export default function CodeEditor({ starterCode, language }: any) {
         <Editor
           height="calc(100% - 40px)"
           theme="vs-dark"
-          language={language}
-          defaultValue={starterCode}
+          language={language === "cpp" ? "cpp" : language}
+          value={starterCode}
+          onChange={(val) => {
+            if (onChange) onChange(val)
+          }}
           options={{
             fontSize: 14,
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
-            padding: { top: 10, bottom: 10 }, // 🔥 spacing inside editor
+            padding: { top: 10, bottom: 10 },
             smoothScrolling: true,
             cursorSmoothCaretAnimation: "on",
           }}

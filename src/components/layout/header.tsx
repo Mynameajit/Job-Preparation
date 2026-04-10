@@ -7,8 +7,8 @@ import { SidebarTrigger } from "../ui/sidebar"
 import { useAppSelector } from "@/hooks/useRedux"
 
 export default function Header() {
-const {user}=useAppSelector((state) => state.user)
-console.log(user);
+  const { user } = useAppSelector((state) => state.user)
+  console.log(user);
 
   return (
     <>

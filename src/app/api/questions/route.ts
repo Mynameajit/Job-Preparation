@@ -2,6 +2,9 @@ import { connectDB } from '@/lib/db';
 import { response } from '@/lib/response';
 import { questionSchema } from '@/lib/ZodSchema';
 import Question from '@/models/Question';
+import User from '@/models/User';
+import jwt from 'jsonwebtoken';
+import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 
 
@@ -51,7 +54,8 @@ export async function GET(req: NextRequest) {
         const questions = await Question.find(query)
             .sort({ createdAt: -1 })
             .skip(skip)
-            .limit(limit);
+            .limit(limit)
+            .lean();
 
         const totalQuestions = await Question.countDocuments(query);
 
@@ -61,6 +65,25 @@ export async function GET(req: NextRequest) {
         const medium = await Question.countDocuments({ difficulty: "medium" })
         const hard = await Question.countDocuments({ difficulty: "hard" })
 
+        // Evaluate Solved Questions
+        let solvedSet = new Set<string>();
+        const cookiesStore = await cookies();
+        const token = cookiesStore.get("token")?.value;
+        if (token) {
+            try {
+                const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+                const user = await User.findById(decoded.userId).select("solvedQuestions").lean();
+                if (user?.solvedQuestions) {
+                    user.solvedQuestions.forEach((id: any) => solvedSet.add(id.toString()));
+                }
+            } catch(e) {}
+        }
+
+        const mappedQuestions = questions.map(q => ({
+            ...q,
+            isSolved: solvedSet.has(q._id.toString())
+        }));
+
         const stars = {
             total,
             easy,
@@ -69,7 +92,7 @@ export async function GET(req: NextRequest) {
         }
 
         const data = {
-            questions,
+            questions: mappedQuestions,
             currentPage: page,
             totalPages: Math.ceil(total / limit),
             totalQuestions,

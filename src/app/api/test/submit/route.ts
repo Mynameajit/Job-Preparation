@@ -3,6 +3,7 @@ import { response } from "@/lib/response";
 import { resultSchema } from "@/lib/ZodSchema";
 import Result from "@/models/result";
 import Test from "@/models/Test";
+import { ActivityModel, ActivityType } from "@/models/Activity";
 import type { NextRequest } from "next/server";
 
 
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest) {
 
 
         const result = await Result.create({
-            userId, // ⚠️ later replace with auth
+            userId,
             testId,
             answers,
             score,
@@ -70,6 +71,15 @@ export async function POST(req: NextRequest) {
             wrongAnswers: wrong,
             timeTaken,
             status: "completed",
+        });
+
+        // 🔥 Create Activity
+        await ActivityModel.create({
+            userId,
+            type: ActivityType.TEST,
+            title: `Completed Mock Test: ${test.title}`,
+            description: `Scored ${score}% on the mock test.`,
+            meta: { testId, score }
         });
 
         return response(true, 200, "Test submitted successfully", result);
