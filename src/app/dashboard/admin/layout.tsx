@@ -4,6 +4,11 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 import { redirect } from "next/navigation"
 import { getAuthUser } from "@/lib/auth"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Admin Dashboard",
+}
 
 /**
  * Layout for the Admin Dashboard.

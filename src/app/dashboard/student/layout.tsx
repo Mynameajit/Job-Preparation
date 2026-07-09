@@ -4,6 +4,11 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 import { redirect } from "next/navigation"
 import { getAuthUser } from "@/lib/auth"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Student Dashboard",
+}
 
 /**
  * Layout for the Student Dashboard.
