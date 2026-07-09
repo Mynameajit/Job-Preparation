@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+  INTERVIEWER
+}
+
+enum QuestionType {
+  MCQ
+  CODING
+  INTERVIEW
+  THEORY
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum SubmissionStatus {
+  PENDING
+  ACCEPTED
+  WRONG_ANSWER
+  COMPILE_ERROR
+  RUNTIME_ERROR
+  REVIEWED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  password     String
+  role         Role     @default(STUDENT)
+  profilePhoto String?
+  bio          String?  @db.Text
+  skills       String[] @default([])
+  location     String?
+  githubUrl    String?
+  linkedinUrl  String?
+  websiteUrl   String?
+
+  // OTP Auth
+  otp       String?
+  otpExpiry DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Category {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  slug        String     @unique
+  description String?    @db.Text
+  questions   Question[]
+
+  createdAt DateTime @default(now())
+}
+
+model Question {
+  id          Int          @id @default(autoincrement())
+  title       String
+  slug        String       @unique
+  description String       @db.Text
+  content     Json? // Detailed question data (markdown, test cases, etc.)
+  type        QuestionType @default(INTERVIEW)
+  difficulty  Difficulty   @default(MEDIUM)
+  categoryId  Int
+  category    Category     @relation(fields: [categoryId], references: [id])
+  submissions Submission[]
+
+  // For MCQs
+  options Json? // [{ text: string, isCorrect: boolean }]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  tests     MockTest[]
+}
+
+model Submission {
+  id         Int              @id @default(autoincrement())
+  userId     String
+  questionId Int
+  question   Question         @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  status     SubmissionStatus @default(PENDING)
+  code       String?          @db.Text // User's code
+  answer     String?          @db.Text // User's answer for interview/theory
+  score      Int?
+  feedback   String?          @db.Text
+
+  createdAt DateTime @default(now())
+}
+
+model MockTest {
+  id           Int          @id @default(autoincrement())
+  title        String
+  description  String?      @db.Text
+  duration     Int // in minutes
+  passingScore Int          @default(70) // Percentage
+  difficulty   Difficulty   @default(MEDIUM)
+  startTime    DateTime?
+  endTime      DateTime?
+  maxAttempts  Int          @default(3)
+  terms        String?      @db.Text
+  results      TestResult[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  questions Question[]
+}
+
+model TestResult {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  testId     Int
+  mockTest   MockTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+  score      Int
+  total      Int
+  percentage Float
+  answers    Json?
+
+  createdAt DateTime @default(now())
+}
